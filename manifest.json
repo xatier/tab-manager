@@ -1,0 +1,20 @@
+{
+    "manifest_version": 2,
+
+    "name": "Tab Manager",
+    "description": "Tab management made easily.",
+    "version": "0.1",
+
+    "background": {
+        "scripts": ["app.js"],
+        "persistent": false
+    },
+    "browser_action": {},
+
+    "permissions": [
+        "http://127.0.0.1:9487/",
+        "activeTab",
+        "contextMenus",
+        "tabs"
+    ]
+}
