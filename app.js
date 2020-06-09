@@ -10,8 +10,8 @@ function getAllTabs() {
                 let w = windows[win];
                 if (w.type === "normal") {
                     let current = { win: w.id, tabs: [] };
-                    for (let t in w["tabs"]) {
-                        current["tabs"].push(w["tabs"][t]);
+                    for (let t in w.tabs) {
+                        current.tabs.push(w.tabs[t]);
                     }
                     tabs.push(current);
                 }
