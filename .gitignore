@@ -1,2 +1,3 @@
 tab-manager-server/venv/
 tab-manager-server/__pycache__/
+node_modules/

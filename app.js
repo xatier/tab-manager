@@ -1,92 +1,90 @@
-/* eslint-disable no-unused-vars */
+/* eslint-disable no-console */
+/* global fetch:false */
 
-const SERVER_URL = "http://localhost:9487"
+(function _() {
+    const SERVER_URL = 'http://localhost:9487';
 
-// an hour
-const TIMEOUT = 60*60*1000
+    // an hour
+    const TIMEOUT = 60 * 60 * 1000;
 
-function getAllTabs() {
-    return new Promise(function (resolve, reject) {
-        chrome.windows.getAll({ populate: true }, function (windows) {
-            let tabs = [];
-            for (let win in windows) {
-                let w = windows[win];
-                if (w.type === "normal") {
-                    let current = { win: w.id, tabs: [] };
-                    for (let t in w.tabs) {
-                        current.tabs.push(w.tabs[t]);
-                    }
-                    tabs.push(current);
-                }
-            }
-            resolve(tabs);
+    function getAllTabs() {
+        return new Promise((resolve) => {
+            chrome.windows.getAll({ populate: true }, (windows) => {
+                const tabs = [];
+                windows
+                    .filter(({ type }) => type === 'normal')
+                    .forEach((win) => {
+                        const current = { win: win.id, tabs: [] };
+                        win.tabs.forEach((tab) => {
+                            current.tabs.push(tab);
+                        });
+                        tabs.push(current);
+                    });
+                resolve(tabs);
+            });
         });
-    });
-}
-
-async function saveAllTabs(tab) {
-    let tabs = await getAllTabs();
-
-    let response = await fetch(SERVER_URL + "/save", {
-        method: "POST",
-        mode: "cors",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ data: JSON.stringify(tabs) }),
-    });
-
-    console.log("save");
-    console.log(response);
-}
-
-async function loadAllTabs(info, tab) {
-    let response = await fetch(SERVER_URL + "/load");
-    let windows = await response.json();
-
-    console.log("load");
-    console.log(windows);
-
-    for (let win in windows) {
-        let urls = windows[win].tabs.map((e) => e.url);
-        chrome.windows.create({ url: urls });
     }
-}
 
-function setupChromeExtension() {
-    chrome.browserAction.onClicked.addListener(saveAllTabs);
+    async function saveAllTabs() {
+        const tabs = await getAllTabs();
 
-    chrome.runtime.onInstalled.addListener(function () {
-        chrome.contextMenus.create({
-            id: "load-all-tabs",
-            title: "Load all tabs",
-            contexts: ["browser_action", "page"],
+        const response = await fetch(`${SERVER_URL}/save`, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ data: JSON.stringify(tabs) }),
         });
 
-        chrome.contextMenus.create({
-            id: "save-all-tabs",
-            title: "Save all tabs",
-            contexts: ["browser_action", "page"],
+        console.log('save');
+        console.log(response);
+    }
+
+    async function loadAllTabs() {
+        const response = await fetch(`${SERVER_URL}/load`);
+        const windows = await response.json();
+
+        console.log('load');
+        console.log(windows);
+
+        windows.forEach(({ tabs }) => {
+            chrome.windows.create({ url: tabs.map(({ url }) => url) });
         });
-    });
+    }
 
-    chrome.contextMenus.onClicked.addListener(function (info, tab) {
-        if (info.menuItemId === "load-all-tabs") {
-            loadAllTabs();
-        } else if (info.menuItemId === "save-all-tabs") {
-            saveAllTabs();
-        }
-    });
-}
+    function setupChromeExtension() {
+        chrome.browserAction.onClicked.addListener(saveAllTabs);
 
-function setupTimeout() {
-    // auto save all tabs every TIMEOUT ms
-    setInterval(saveAllTabs, TIMEOUT);
-}
+        chrome.runtime.onInstalled.addListener(() => {
+            chrome.contextMenus.create({
+                id: 'load-all-tabs',
+                title: 'Load all tabs',
+                contexts: ['browser_action', 'page'],
+            });
 
-// main function
-function _() {
-    setupChromeExtension()
-    setupTimeout()
-}
-_();
+            chrome.contextMenus.create({
+                id: 'save-all-tabs',
+                title: 'Save all tabs',
+                contexts: ['browser_action', 'page'],
+            });
+        });
+
+        chrome.contextMenus.onClicked.addListener(({ menuItemId }) => {
+            if (menuItemId === 'load-all-tabs') {
+                loadAllTabs();
+            } else if (menuItemId === 'save-all-tabs') {
+                saveAllTabs();
+            }
+        });
+    }
+
+    function setupTimeout() {
+        // auto save all tabs every TIMEOUT ms
+        setInterval(saveAllTabs, TIMEOUT);
+    }
+
+    // init
+    setupChromeExtension();
+    setupTimeout();
+})();
