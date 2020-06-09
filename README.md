@@ -24,6 +24,8 @@ pip install -U pip
 pip install -r requirements.txt
 
 uvicorn server:app --reload --port 9487
+
+# note that the chromium extension would automatically save all tabs once every hour
 ```
 
 ## See also
