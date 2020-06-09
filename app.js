@@ -2,6 +2,9 @@
 
 const SERVER_URL = "http://localhost:9487"
 
+// an hour
+const TIMEOUT = 60*60*1000
+
 function getAllTabs() {
     return new Promise(function (resolve, reject) {
         chrome.windows.getAll({ populate: true }, function (windows) {
@@ -75,5 +78,8 @@ function _() {
             saveAllTabs();
         }
     });
+
+    // auto save all tabs every TIMEOUT ms
+    setInterval(saveAllTabs, TIMEOUT);
 }
 _();
