@@ -53,8 +53,7 @@ async function loadAllTabs(info, tab) {
     }
 }
 
-// main function
-function _() {
+function setupChromeExtension() {
     chrome.browserAction.onClicked.addListener(saveAllTabs);
 
     chrome.runtime.onInstalled.addListener(function () {
@@ -78,8 +77,16 @@ function _() {
             saveAllTabs();
         }
     });
+}
 
+function setupTimeout() {
     // auto save all tabs every TIMEOUT ms
     setInterval(saveAllTabs, TIMEOUT);
+}
+
+// main function
+function _() {
+    setupChromeExtension()
+    setupTimeout()
 }
 _();
