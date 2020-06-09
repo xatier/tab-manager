@@ -1,0 +1,6 @@
+{
+    "python.pythonPath": "tab-manager-server/venv/bin/python",
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
+}
