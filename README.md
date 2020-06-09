@@ -15,6 +15,7 @@ Simple OneTab replacement.
 3. Load unpacked
 4. Prepare python venv
 5. Launch python server
+6. You may want to change a few variables, such as timeout or save-path
 
 ```bash
 cd tab-manager/tab-manager-server
