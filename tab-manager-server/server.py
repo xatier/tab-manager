@@ -1,6 +1,7 @@
 import json
 import pickle
 from typing import List
+import time
 
 from fastapi import FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -56,6 +57,7 @@ def load_payload() -> List:
 
 @app.get("/load")
 def load() -> List:
+    print(f'/load {time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime())}')
     j = load_payload()
     print_payload(j)
     return j
@@ -63,6 +65,7 @@ def load() -> List:
 
 @app.post("/save", status_code=status.HTTP_201_CREATED)
 def save(payload: Payload) -> None:
+    print(f'/save {time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime())}')
     j = json.loads(payload.data)
     print_payload(j)
     save_payload(j)
