@@ -38,6 +38,16 @@ uvicorn server:app --reload --port 9487
 
 Someone draw me one, please.
 
+## Development
+
+The chrome extension part uses [ESLint](https://eslint.org/) and [Prettier](https://prettier.io/) as linter and formatter, run commands below to install them:
+
+```bash
+$ npm install -g eslint prettier
+# or
+$ yarn global add eslint prettier
+```
+
 ## Special thanks
 
 [@david50407](https://github.com/david50407) helped me on crappy JavaScript issues.
