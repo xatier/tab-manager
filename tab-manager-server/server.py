@@ -1,4 +1,5 @@
 import json
+import os
 import pickle
 from typing import List
 import time
@@ -43,6 +44,8 @@ def print_payload(j: List) -> None:
 
     console.print(table)
 
+def move_saved() -> None:
+    os.rename(PATH, f'{PATH}.{int(time.time())}')
 
 def save_payload(j: List) -> None:
     with open(PATH, "wb") as f:
@@ -68,4 +71,5 @@ def save(payload: Payload) -> None:
     print(f'/save {time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime())}')
     j = json.loads(payload.data)
     print_payload(j)
+    move_saved()
     save_payload(j)
