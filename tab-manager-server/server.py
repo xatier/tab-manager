@@ -73,3 +73,4 @@ def save(payload: Payload) -> None:
     print_payload(j)
     move_saved()
     save_payload(j)
+    print(f'/save {time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.localtime())}')
